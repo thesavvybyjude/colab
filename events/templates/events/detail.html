@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ event.title }} · CoLab{% endblock %}
+{% block content %}
+  <p><a class="back" href="{% url 'home' %}">All events</a></p>
+  <h1>{{ event.title }}</h1>
+  {% if event.has_ended %}<p class="empty">This event has ended.</p>{% endif %}
+  <dl class="facts">
+    <dt>When</dt><dd>{{ event.when }}</dd>
+    <dt>Where</dt><dd>{{ event.space }}</dd>
+    <dt>Host</dt><dd>{{ event.host_name }}</dd>
+  </dl>
+  <div class="description">{{ event.description|linebreaks }}</div>
+{% endblock %}

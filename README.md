@@ -9,8 +9,8 @@ What it should do is in [`specs/001-events-core/spec.md`](specs/001-events-core/
 | Slice | What works | State |
 |---|---|---|
 | 0 Foundation | Public home page, staff sign-in, admin, health check, Docker, CI | Done |
-| 1 Staff publish, public sees | | Next |
-| 2 Pitch and approve | | |
+| 1 Staff publish, public sees | Spaces and events in the admin, public upcoming list and event pages, no overlapping approved events in a space (enforced in the database) | Done |
+| 2 Pitch and approve | | Next |
 | 3 Registration | | |
 | 4 Check-in | | |
 | 5 Publicity | | |

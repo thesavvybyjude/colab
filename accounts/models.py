@@ -15,3 +15,8 @@ class User(AbstractUser):
     @property
     def is_colab_admin(self):
         return self.role == self.Role.ADMIN or self.is_superuser
+
+    def save(self, *args, **kwargs):
+        # Admin-site access follows the role both ways: making someone a host removes it.
+        self.is_staff = self.is_colab_admin
+        super().save(*args, **kwargs)

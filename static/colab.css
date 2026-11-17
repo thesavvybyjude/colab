@@ -34,3 +34,11 @@ button[type="submit"] {
   font: inherit; padding: 8px 16px; border: 0; border-radius: 8px;
   background: var(--accent); color: #fff; cursor: pointer;
 }
+
+.event-list { list-style: none; margin: 0; padding: 0; }
+.event-list li { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.event-list a { color: var(--text); font-weight: 500; }
+.meta, .back { color: var(--muted); margin: 4px 0 0; }
+.facts { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0 0 16px; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; }

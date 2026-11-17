@@ -9,7 +9,8 @@ Events and publicity system for CoLab's Jos branch. Staff publish events, the pu
 ## Commands
 
 ```bash
-. .venv/bin/activate                    # python3 -m venv .venv && pip install -r requirements-dev.txt if missing
+. .venv/bin/activate                    # uv venv -p 3.12 .venv && uv pip install -r requirements-dev.txt if missing
+export DJANGO_DEBUG=true                # settings don't read .env; manage.py needs this locally
 python manage.py runserver              # SQLite, no Docker needed
 pytest                                  # tests (DJANGO_DEBUG=true is set by pytest config)
 ruff check . && ruff format --check .   # lint

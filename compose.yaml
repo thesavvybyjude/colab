@@ -1,0 +1,32 @@
+# Local stack: the app and its database. Start with `docker compose up --build`, stop with `docker compose down`.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: colab
+      POSTGRES_USER: colab
+      POSTGRES_PASSWORD: colab
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U colab -d colab"]
+      interval: 5s
+      retries: 10
+    mem_limit: 512m
+    restart: "no"
+
+  web:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://colab:colab@db:5432/colab
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    mem_limit: 512m
+    restart: "no"
+
+volumes:
+  db-data:

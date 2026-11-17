@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Page not found · CoLab{% endblock %}
+{% block content %}
+  <h1>Page not found</h1>
+  <p class="empty">This page doesn't exist, or the event is no longer listed.</p>
+  <p><a class="back" href="{% url 'home' %}">See what's on at CoLab</a></p>
+{% endblock %}

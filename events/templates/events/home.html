@@ -5,8 +5,10 @@
     <ul class="event-list">
       {% for event in events %}
         <li>
-          <a href="{% url 'event_detail' event.pk %}">{{ event.title }}</a>
-          <p class="meta">{{ event.when }} · {{ event.space }}</p>
+          <a class="event-row" href="{% url 'event_detail' event.pk %}">
+            <span class="event-title">{{ event.title }}</span>
+            <span class="meta">{{ event.when }} · {{ event.space }}</span>
+          </a>
         </li>
       {% endfor %}
     </ul>

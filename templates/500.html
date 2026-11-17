@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Something went wrong · CoLab{% endblock %}
+{% block content %}
+  <h1>Something went wrong</h1>
+  <p class="empty">Sorry, that didn't work on our side. Please try again in a moment.</p>
+  <p><a class="back" href="{% url 'home' %}">Back to CoLab events</a></p>
+{% endblock %}

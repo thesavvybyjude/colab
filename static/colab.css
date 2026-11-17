@@ -5,6 +5,7 @@
   --muted: #6b6a66;
   --line: rgba(28, 28, 27, 0.1);
   --accent: #1f5f4a;
+  --error: #b42318;
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   color: var(--text);
   background: var(--bg);
@@ -22,23 +23,29 @@ body { margin: 0; line-height: 1.5; }
 }
 .brand { font-weight: 600; color: var(--text); text-decoration: none; }
 nav a, .link { color: var(--muted); font: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
+/* 44px minimum tap height for every link and control on a phone. */
+.brand, nav a, .link, .back { display: inline-flex; align-items: center; min-height: 44px; }
 
 main { max-width: 720px; margin: 0 auto; padding: 32px 24px; }
 h1 { font-size: 1.5rem; font-weight: 500; margin: 0 0 16px; }
-.empty, .error { color: var(--muted); }
+.empty { color: var(--muted); }
+.error { color: var(--error); font-weight: 500; }
 
 .stack { display: grid; gap: 12px; max-width: 320px; }
 .stack label { display: grid; gap: 4px; }
-input { font: inherit; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; }
+input { font: inherit; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; }
 button[type="submit"] {
-  font: inherit; padding: 8px 16px; border: 0; border-radius: 8px;
+  font: inherit; min-height: 44px; padding: 8px 16px; border: 0; border-radius: 8px;
   background: var(--accent); color: #fff; cursor: pointer;
 }
 
 .event-list { list-style: none; margin: 0; padding: 0; }
-.event-list li { padding: 12px 0; border-bottom: 1px solid var(--line); }
-.event-list a { color: var(--text); font-weight: 500; }
-.meta, .back { color: var(--muted); margin: 4px 0 0; }
+.event-list li { border-bottom: 1px solid var(--line); }
+.event-row { display: block; min-height: 44px; padding: 12px 0; color: var(--text); text-decoration: none; }
+.event-row:hover .event-title { text-decoration: underline; }
+.event-title { display: block; font-weight: 500; }
+.meta, .back { color: var(--muted); }
+.meta { display: block; margin-top: 4px; }
 .facts { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0 0 16px; }
 .facts dt { color: var(--muted); }
 .facts dd { margin: 0; }

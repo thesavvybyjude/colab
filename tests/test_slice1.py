@@ -4,10 +4,11 @@ from datetime import timedelta
 from unittest import mock
 
 import pytest
-from django.db import IntegrityError, transaction
+from django.db import IntegrityError, connection, transaction
 from django.urls import reverse
 from django.utils import timezone
 
+from events.db_guards import ensure_sqlite_overlap_guard
 from events.models import Event, Space
 
 pytestmark = pytest.mark.django_db
@@ -185,11 +186,16 @@ def test_visitor_not_signed_in_is_sent_to_sign_in_from_admin_screens(client, spa
 
 
 def test_host_role_cannot_open_event_admin(client, django_user_model, space):
-    host = django_user_model.objects.create_user(username="lily", password="x", role="host", is_staff=True)
+    host = django_user_model.objects.create_user(username="lily", password="x", role="host")
+    # Bypass save() so the staff flag is on: only the role check in ColabAdminOnly stands in the way.
+    django_user_model.objects.filter(pk=host.pk).update(is_staff=True)
     client.force_login(host)
-    response = client.get(reverse("admin:events_event_changelist"))
-    assert response.status_code == 302
-    assert "/admin/login/" in response["Location"]
+    for url in (
+        reverse("admin:events_event_changelist"),
+        reverse("admin:events_event_add"),
+        reverse("admin:events_space_changelist"),
+    ):
+        assert client.get(url).status_code == 403, url
 
 
 def test_admin_role_gets_admin_access_and_loses_it_when_made_host(client, django_user_model):
@@ -203,3 +209,24 @@ def test_admin_role_gets_admin_access_and_loses_it_when_made_host(client, django
     user.refresh_from_db()
     assert not user.is_staff
     assert client.get(reverse("admin:events_event_changelist")).status_code == 302
+
+
+def test_demoting_with_update_fields_role_removes_admin_access(client, django_user_model):
+    user = django_user_model.objects.create_user(username="ada", password="x", role="admin")
+    client.force_login(user)
+    user.role = "host"
+    user.save(update_fields=["role"])
+    user.refresh_from_db()
+    assert not user.is_staff
+    assert client.get(reverse("admin:events_event_changelist")).status_code == 302
+
+
+@pytest.mark.skipif(connection.vendor != "sqlite", reason="SQLite trigger guard only")
+def test_sqlite_overlap_guard_heals_after_triggers_are_dropped(space):
+    with connection.cursor() as cursor:
+        cursor.execute("DROP TRIGGER event_no_overlap_insert")
+        cursor.execute("DROP TRIGGER event_no_overlap_update")
+    ensure_sqlite_overlap_guard(connection)
+    make_event(space, at(3, 10), at(3, 12))
+    with pytest.raises(IntegrityError), transaction.atomic():
+        make_event(space, at(3, 11), at(3, 13), title="Pitch Night")

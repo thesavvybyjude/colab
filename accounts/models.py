@@ -19,4 +19,7 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         # Admin-site access follows the role both ways: making someone a host removes it.
         self.is_staff = self.is_colab_admin
+        update_fields = kwargs.get("update_fields")
+        if update_fields is not None and "role" in update_fields:
+            kwargs["update_fields"] = {*update_fields, "is_staff"}
         super().save(*args, **kwargs)
